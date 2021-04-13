@@ -1,25 +1,27 @@
+import React, { Component } from "react"
+import { Howl } from "howler";
+import webm from "./tracks/sprite.webm";
+import mp3 from "./tracks/sprite.mp3"
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  Sprite1 = src => {
+
+  }
+  
+  render () {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <button > Loop 1 </button>
+          <button > Loop 2 </button>
+        </header>
+      </div>
+    );
+  }
+  
 }
 
 export default App;
