@@ -1,8 +1,10 @@
 import React, { Component } from "react"
 import { Howl } from "howler";
+
 import webm from "./tracks/sprite.webm";
 import mp3 from "./tracks/sprite.mp3"
-import logo from './logo.svg';
+import Button from "./components/Button";
+
 import './App.css';
 
 class App extends Component {
@@ -93,8 +95,8 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <button onClick={() => this.Sprite1("loop1")}> Loop 1 </button>
-          <button onClick={() => this.Sprite1("loop2")}> Loop 2 </button>
+          <Button onClick={() => this.Sprite1("loop1")} name="Loop 1" />
+          <Button onClick={() => this.Sprite1("loop2")} name="Loop 2" />
         </header>
       </div>
     );
