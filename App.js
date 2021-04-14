@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
-import mp3 from "./tracks/sprite.mp3";   //Web Audio API
+import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import "./App.css";
 
@@ -13,33 +13,18 @@ class App extends Component {
   state = {
     sound: null,
     soundIds: {},
-    mySounds: [],
     buttons: [
-      { name: "loop1", currentState: false },
+      { name: "loop1", currentState: false }
       { name: "loop2", currentState: false },
-      { name: "loop3", currentState: false },
-      { name: "loop4", currentState: false },
-      { name: "loop5", currentState: false }
+      { name: "loop3", currentState: false }
     ], // for disabled btn for other users
   };
 
   Sprite1(index, button) {
-    const { buttons, mySounds } = this.state;
-    // buttons[index].currentState = true;
-    // this.setState({buttons})
-    if (!mySounds.includes(index)) {
-      mySounds.push(index);
-      this.setState({mySounds});
-      button.currentState = true;
-      socket.emit("send_message", { index, button });
-    } else {
-      button.currentState = false;
-      socket.emit("send_message", { index, button });
-      const myNewSounds = mySounds.filter(sound => sound !== index)
-      this.setState({mySounds: myNewSounds});
-    }
-
-
+    const { buttons } = this.state;
+    buttons[index].currentState = true;
+    this.setState({buttons}) 
+   alert(this.state.buttons[index].currentState)
     let value = true;
 
     // if (this.state.soundIds[src]) {
@@ -48,11 +33,12 @@ class App extends Component {
 
     // // must to call This = App
     // if (value === true) {
+      
     //   const newSound = this.state.sound.play(src);
     //   socket.emit("send_message", src);
     //   this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound } });
     // }
-    // // if (value === false) {
+    // if (value === false) {
     //   this.state.sound.stop(this.state.soundIds[src]);
     //   delete this.state.soundIds[src];
     //   socket.emit("stop_everyone", src);
@@ -90,59 +76,48 @@ class App extends Component {
     });
 
     // Global Loop.mp3
-    socket.on("message", (data) => {
-      console.log("RECEIVING MESSAGE...", data);
-      if (data.button.currentState) {
-        this.state.sound.play(data.button.name);
-      } else { 
-        this.state.sound.stop(data.button.name);
-
-       } 
-      const { buttons, mySounds } = this.state;
-      buttons[data.index] = data.button;
-      this.setState({ buttons });
-    //  this.setState({ value: [...this.state.value, src] }); // to turn the btn dsiabled for receviers
+    socket.on("message", (src) => {
+      this.state.sound.play(src);
+      this.setState({ value: [...this.state.value, src] }); // to turn the btn dsiabled for receviers
     });
 
-
-    
-
     //Global Delete
-    // socket.on("stop_play", (src) => {
-    //   this.state.sound.stop(this.state.soundIds[src]);
-    //   delete this.state.soundIds[src];
-    //   console.log("ON STOP PLAY...", src);
-    //   console.log("STATE ARRAY", this.state.value);
-    //   this.state.value.forEach((x, index) => {
-    //     if (x === src) {
-    //       this.state.value.splice(index, 1);
-    //     }
-    //   });
+    socket.on("stop_play", (src) => {
+      this.state.sound.stop(this.state.soundIds[src]);
+      delete this.state.soundIds[src];
+      console.log("ON STOP PLAY...", src);
+      console.log("STATE ARRAY", this.state.value);
+      this.state.value.forEach((x, index) => {
+        if (x === src) {
+          this.state.value.splice(index, 1);
+        }
+      });
 
-    //   console.log("AFTER STATE ARRAY", this.state.value);
-    // });
-  // }
+      console.log("AFTER STATE ARRAY", this.state.value);
+    });
+  }
 
   // problem1 - initial delay <- Firefox
   // problem2 - doesn't update disabled to false , until next button is pressed
   // problem3 - internal metronome/counter in seconds
 
   render() {
-    const { buttons, mySounds } = this.state;
+    const { buttons } = this.state;
     return (
       <div className="App">
-        {buttons.map((button, index) => {
-          return (
-            <Button
-              onClick={() => this.Sprite1(index, button)}
-              name={button.name}
-              id={button.name}
-              key={index}
-              disabled={!mySounds.includes(index) && button.currentState} //Passes Array of loops in progress
-            />
-          );
-        })}
-        {/* <Button
+        {
+          buttons.map((button, index) => {
+        return (
+        <Button
+          onClick={() => this.Sprite1(index, button)}
+          name={button.name}
+          id={button.name}
+          key={index}
+          disabled={button.currentState}//Passes Array of loops in progress
+        />    )
+          })
+        }
+        <Button
           onClick={() => this.Sprite1("loop1")}
           name="Loop 1"
           id="loop1"
@@ -159,7 +134,7 @@ class App extends Component {
           name="Loop 3"
           id="loop3"
           unique={this.state.value}
-        /> */}
+        />
       </div>
     );
   }
