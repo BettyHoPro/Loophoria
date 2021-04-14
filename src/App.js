@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
-import mp3 from "./tracks/sprite.mp3"; // Web Audio API
+import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import './App.css';
 
@@ -13,7 +13,7 @@ class App extends Component {
   state = {
     sound: null,
     soundIds: {},
-    value: false // for disabled btn for other users
+    value: '' // for disabled btn for other users
   };
 
   Sprite1(src) {
@@ -123,8 +123,9 @@ class App extends Component {
      // Global Loop.mp3
      socket.on("message", (src) => {
         this.state.sound.play(src);
-        console.log("Client_receving");
-        this.setState({value: true}); // to turn the btn dsiabled for receviers
+        console.log("BEFORE", this.state);
+        this.setState({value: src}); // to turn the btn dsiabled for receviers
+        console.log("AFTER", this.state);
      });
 
      //Global Delete
@@ -132,17 +133,24 @@ class App extends Component {
        console.log("Stop_play_client");
        this.state.sound.stop(this.state.soundIds[src]);
        delete this.state.soundIds[src];
-       this.setState({value: false});
+       this.setState({value: ''}); //empty string = falsy
      });
     }
-    
+
+
+
+// name =  "Loop 1" //what we see
+// src = "loop1" = this.state.value
+// unique = this.state.value = "loop1"
+// id = "loop1"  
   
-  render () {
+
+  render () {             
     return (
       <div className="App">
-          <Button onClick={() => this.Sprite1("loop1")} name="Loop 1" disabled={this.state.value}/>
-          <Button onClick={() => this.Sprite1("loop2")} name="Loop 2" disabled={this.state.value}/>
-      </div>
+          <Button onClick={() => this.Sprite1("loop1")} name="Loop 1" id="loop1" unique={this.state.value} />
+          <Button onClick={() => this.Sprite1("loop2")} name="Loop 2" id="loop2" unique={this.state.value} />          
+      </div> 
     );
   }
   
