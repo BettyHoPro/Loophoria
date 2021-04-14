@@ -4,14 +4,15 @@ import React from "react";
 export default function Button(props) {
   
 const localValue = () => {
-if (props.id === props.unique) {
-  return true
-} else { return false }
- }  
-
-console.log("UNIQUE", props.unique);
-console.log("LOCAL_VALUE", localValue());
-
+  for (let loop of props.unique) {
+    if (props.id === loop) {
+      return true
+    } else { 
+      return false 
+    }
+  } 
+}  
+console.log("LOCALVALUE", localValue());
   return (
     <button
     id={props.id}
