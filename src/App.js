@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Howl } from "howler";
-
+import { io } from "socket.io-client";
 
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
-import mp3 from "./tracks/sprite.mp3" // Web Audio API
-import Button from "./components/Button";
+import mp3 from "./tracks/sprite.mp3"; // Web Audio API
 
+import Button from "./components/Button";
 import './App.css';
+
+const socket = io('http://localhost:4000');
 
 class App extends Component {
   // coz it is class base, so we don't destruct [ state, setState] 
@@ -25,6 +27,7 @@ class App extends Component {
     // must to call This = App
     if (value === true) {
       const newSound = this.state.sound.play(src); 
+      socket.emit('send message', src);
       this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }});
     }
     if (value === false) {
@@ -118,7 +121,8 @@ class App extends Component {
      }) 
     }
     
-      
+    /////// websocket logic//////
+    
    
   render () {
     return (
