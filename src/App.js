@@ -53,25 +53,6 @@ class App extends Component {
       this.setState({ buttonsInUse: newButtons });
       socket.emit("stop_message", src, index, button );
     }
-
-
-    let value = true;
-
-    // if (this.state.soundIds[src]) {
-    //   value = false;
-    // }
-
-    // // must to call This = App
-    // if (value === true) {
-    //   const newSound = this.state.sound.play(src);
-    //   socket.emit("send_message", src);
-    //   this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound } });
-    // }
-    // // if (value === false) {
-    //   this.state.sound.stop(this.state.soundIds[src]);
-    //   delete this.state.soundIds[src];
-    //   socket.emit("stop_everyone", src);
-    // }
   }
 
   // this is like useEffect not to cause re-render
@@ -105,18 +86,16 @@ class App extends Component {
     });
 
     // Global Loop.mp3
-    socket.on("message", (data) => {
-      console.log("RECEIVING MESSAGE...", data);
-      if (data.button.currentState) {
-        this.state.sound.play(data.button.name);
-      } else { 
-        this.state.sound.stop(data.button.name);
-
-       } 
-      const { buttons, mySounds } = this.state;
-      buttons[data.index] = data.button;
-      this.setState({ buttons });
-    //  this.setState({ value: [...this.state.value, src] }); // to turn the btn dsiabled for receviers
+    socket.on("message", (src, index, button) => {
+   //console.log("CLIENT1", src, index, button); 
+   const { buttons } = this.state;
+   button.currentState = true; //buttonDisabled 
+   //console.log("CLIENT2", src, index, button);       
+   //console.log("STATE", this.state.buttons[index]);       
+   buttons[index] = button; 
+   this.setState({ buttons });
+   this.state.sound.play(src); //playSound
+   //console.log("STATE_After",  this.state.buttons[index]); 
     });
 
 
