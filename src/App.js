@@ -16,6 +16,7 @@ class App extends Component {
     buttonsInUse: [], //UPDATES SENDER STATE ONLY
     buttons: [
       //UPDATES EVERY CLIENT EXCEPT SENDER
+      { name: "loop0", currentState: false },
       { name: "loop1", currentState: false },
       { name: "loop2", currentState: false },
       { name: "loop3", currentState: false },
@@ -67,6 +68,7 @@ class App extends Component {
       sound: new Howl({
         src: [webm, mp3],
         sprite: {
+          loop0: [0, 0],
           loop1: [108000, 10055.98639455782],
           loop2: [120000, 10055.986394557835],
           loop3: [132000, 10055.986394557835],
