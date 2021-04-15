@@ -48,7 +48,7 @@ class App extends Component {
         soundIds: { ...this.state.soundIds, [src]: newSound },
         buttonsInUse,
       });
-      socket.emit("start_message", src, index, button);
+      socket.emit("send_message", src, index, button);
     }
     if (value === false) {
       this.state.sound.stop(this.state.soundIds[src]);
