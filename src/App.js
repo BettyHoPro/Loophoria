@@ -1,21 +1,23 @@
 import React, { Component } from "react";
 import { Howl } from "howler";
-
-
+import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
-import mp3 from "./tracks/sprite.mp3" // Web Audio API
+import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
-
 import './App.css';
+
+// const socket = io('http://localhost:4000'); //connect to server
+const socket = io('https://loophoria-server.herokuapp.com/');
 
 class App extends Component {
   // coz it is class base, so we don't destruct [ state, setState] 
   state = {
     sound: null,
-    soundIds: {}
+    soundIds: {},
+    value: '' // for disabled btn for other users
   };
 
-  Sprite1 = src => {
+  Sprite1(src) {
     let value = true;
 
     if (this.state.soundIds[src]) {
@@ -25,11 +27,13 @@ class App extends Component {
     // must to call This = App
     if (value === true) {
       const newSound = this.state.sound.play(src); 
+      socket.emit('send_message', src);
       this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }});
     }
     if (value === false) {
       this.state.sound.stop(this.state.soundIds[src]);
-      delete this.state.soundIds[src]
+      delete this.state.soundIds[src];
+      socket.emit("stop_everyone", src);
     }
   }
 
@@ -115,21 +119,39 @@ class App extends Component {
           html5: true,
           loop: true
         })
-     }) 
+     });
+
+     // Global Loop.mp3
+     socket.on("message", (src) => {
+        this.state.sound.play(src);
+        console.log("BEFORE", this.state);
+        this.setState({value: src}); // to turn the btn dsiabled for receviers
+        console.log("AFTER", this.state);
+     });
+
+     //Global Delete
+     socket.on("stop_play", (src)=>{
+       console.log("Stop_play_client");
+       this.state.sound.stop(this.state.soundIds[src]);
+       delete this.state.soundIds[src];
+       this.setState({value: ''}); //empty string = falsy
+     });
     }
-    
-      
-   
-  render () {
+
+
+
+// name =  "Loop 1" //what we see
+// src = "loop1" = this.state.value
+// unique = this.state.value = "loop1"
+// id = "loop1"  
+  
+
+  render () {             
     return (
       <div className="App">
-        <header className="App-header">
-          <Button onClick={() => this.Sprite1("loop1")} name="Loop 1" />
-          <Button onClick={() => this.Sprite1("loop2")} name="Loop 2" />
-          {/* <Button onClick={() => this.Sprite1("loop3")} name="Loop 3" />
-          <Button onClick={() => this.Sprite1("loop4")} name="Loop 4" /> */}
-        </header>
-      </div>
+          <Button onClick={() => this.Sprite1("loop1")} name="Loop 1" id="loop1" unique={this.state.value} />
+          <Button onClick={() => this.Sprite1("loop2")} name="Loop 2" id="loop2" unique={this.state.value} />          
+      </div> 
     );
   }
   
