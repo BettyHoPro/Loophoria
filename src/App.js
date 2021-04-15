@@ -127,7 +127,8 @@ class App extends Component {
   // problem6 -> metronome/internal timer to work around sound delay
   // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
   // problem8 -> Sound state needs to get passed in order for it to work precisely
-
+  // problem9 -> update loophoria server code
+  
 
   render() {
     const { buttons } = this.state;
