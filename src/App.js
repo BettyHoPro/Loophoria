@@ -5,7 +5,10 @@ import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button"; //
 import "./App.css";
-const socket = io("http://localhost:4000"); //connect to server
+//const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
+const socket = io("http://localhost:4000"); // local server URL
+
+
 
 class App extends Component {
   // coz it is class base, so we don't destruct [ state, setState]git
@@ -104,16 +107,16 @@ class App extends Component {
     });
 
     socket.on("stop_play", (src, index, button) => {
-      //  console.log("CLIENT_STOP1", src, index, button);
+        console.log("CLIENT_STOP1", src, index, button);
       const { buttons } = this.state;
       button.currentState = false;
-      //  console.log("CLIENT_STOP2", src, index, button);
+        console.log("CLIENT_STOP2", src, index, button);
       this.state.sound.stop(this.state.soundIds[src]);
       delete this.state.soundIds[src];
       buttons[index] = button;
-      //  console.log("STATE_STOP1", this.state.buttons[index]);
+        console.log("STATE_STOP1", this.state.buttons[index]);
       this.setState({ buttons });
-      //  console.log("STATE_STOP2", this.state.buttons[index]);
+        console.log("STATE_STOP2", this.state.buttons[index]);
     });
   }
 
