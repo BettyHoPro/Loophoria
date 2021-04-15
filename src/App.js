@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Howl } from "howler";
 import { io } from "socket.io-client";
-import webm from "./tracks/sprite.webm"; //HTML5 Audio API
-import mp3 from "./tracks/sprite.mp3";   //Web Audio API
-import Button from "./components/Button";
+import webm from "./tracks/sprite.webm";   //HTML5 Audio API
+import mp3 from "./tracks/sprite.mp3";     //Web Audio API
+import Button from "./components/Button";  //
 import "./App.css";
-
 const socket = io("http://localhost:4000"); //connect to server
 
 class App extends Component {
@@ -105,7 +104,7 @@ class App extends Component {
     });
 
 
-    
+
 
     //Global Delete
     // socket.on("stop_play", (src) => {
