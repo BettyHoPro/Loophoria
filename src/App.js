@@ -119,41 +119,30 @@ class App extends Component {
   // problem1 - initial delay <- Firefox
   // problem2 - doesn't update disabled to false , until next button is pressed
   // problem3 - internal metronome/counter in seconds
+  //everyone -> but only receivers are disabled, and senders are notified
+  //if you join a session/leave a seesion 
+  //your button history is deleted
+  //metronome
+  //on-sync timing playback
+
+
 
   render() {
-    const { buttons, mySounds } = this.state;
+    const { buttons } = this.state;
     return (
       <div className="App">
         {buttons.map((button, index) => {
           return (
             <Button
-              onClick={() => this.Sprite1(index, button)}
-              name={button.name}
-              id={button.name}
-              key={index}
-              disabled={!mySounds.includes(index) && button.currentState} //Passes Array of loops in progress
+              onClick={() => this.Sprite1(button.name, index, button)}
+              name={button.name} //loop#
+              id={button.name} //loop#
+              key={index} //index number for sounds[index]
+              disabled={button.currentState} //Passes true or false
             />
           );
         })}
-        {/* <Button
-          onClick={() => this.Sprite1("loop1")}
-          name="Loop 1"
-          id="loop1"
-          unique={this.state.value} //Passes Array of loops in progress
-        />
-        <Button
-          onClick={() => this.Sprite1("loop2")}
-          name="Loop 2"
-          id="loop2"
-          unique={this.state.value}
-        />
-        <Button
-          onClick={() => this.Sprite1("loop3")}
-          name="Loop 3"
-          id="loop3"
-          unique={this.state.value}
-        /> */}
-      </div>
+       </div>
     );
   }
 }
