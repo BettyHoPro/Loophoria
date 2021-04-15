@@ -3,7 +3,9 @@ import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
-import Button from "./components/Button"; //
+import Button from "./components/Button";
+import Nav from "./components/Nav";
+
 import "./App.css";
 
 const socket = io("https://loophoria-server.herokuapp.com/"); //connect to server
@@ -16,6 +18,7 @@ class App extends Component {
     buttonsInUse: [], //UPDATES SENDER STATE ONLY
     buttons: [
       //UPDATES EVERY CLIENT EXCEPT SENDER
+      { name: "Start", currentState: false },
       { name: "loop1", currentState: false },
       { name: "loop2", currentState: false },
       { name: "loop3", currentState: false },
@@ -67,6 +70,7 @@ class App extends Component {
       sound: new Howl({
         src: [webm, mp3],
         sprite: {
+          Start: [0, 0],
           loop1: [108000, 10055.98639455782],
           loop2: [120000, 10055.986394557835],
           loop3: [132000, 10055.986394557835],
@@ -134,7 +138,10 @@ class App extends Component {
   render() {
     const { buttons } = this.state;
     return (
+   
       <div className="App">
+        <Nav />
+        <body>
         {buttons.map((button, index) => {
           return (
             <Button
@@ -146,6 +153,7 @@ class App extends Component {
             />
           );
         })}
+        </body>
        </div>
     );
   }
