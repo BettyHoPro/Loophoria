@@ -3,37 +3,61 @@ import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
-import Button from "./components/Button";
-import './App.css';
+import Button from "./components/Button"; //
+import "./App.css";
 
-// const socket = io('http://localhost:4000'); //connect to server
-const socket = io('https://loophoria-server.herokuapp.com/');
+const socket = io("https://loophoria-server.herokuapp.com/"); //connect to server
 
 class App extends Component {
-  // coz it is class base, so we don't destruct [ state, setState] 
+  // coz it is class base, so we don't destruct [ state, setState]git
   state = {
     sound: null,
     soundIds: {},
-    value: '' // for disabled btn for other users
+    buttonsInUse: [], //UPDATES SENDER STATE ONLY
+    buttons: [
+      //UPDATES EVERY CLIENT EXCEPT SENDER
+      { name: "loop1", currentState: false },
+      { name: "loop2", currentState: false },
+      { name: "loop3", currentState: false },
+      { name: "loop4", currentState: false },
+      { name: "loop5", currentState: false },
+      { name: "loop6", currentState: false },
+      { name: "loop7", currentState: false },
+      { name: "loop8", currentState: false },
+      { name: "loop9", currentState: false },
+      { name: "loop10", currentState: false },
+      { name: "loop11", currentState: false },
+      { name: "loop12", currentState: false },
+      { name: "loop13", currentState: false },
+      { name: "loop14", currentState: false },
+      { name: "loop15", currentState: false },
+      { name: "loop16", currentState: false },
+    ],
   };
 
-  Sprite1(src) {
+  Sprite1(src, index, button) {
+    const { buttonsInUse } = this.state;
+    
     let value = true;
-
     if (this.state.soundIds[src]) {
       value = false;
     }
 
-    // must to call This = App
     if (value === true) {
-      const newSound = this.state.sound.play(src); 
-      socket.emit('send_message', src);
-      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }});
+      buttonsInUse.push(index);
+      const newSound = this.state.sound.play(src);
+      this.setState({
+        soundIds: { ...this.state.soundIds, [src]: newSound },
+        buttonsInUse
+      });
+      socket.emit("send_message", src, index, button);
     }
     if (value === false) {
       this.state.sound.stop(this.state.soundIds[src]);
       delete this.state.soundIds[src];
-      socket.emit("stop_everyone", src);
+      const newButtons = buttonsInUse.filter((sound) => sound !== index);
+      this.setState({ buttonsInUse: newButtons });
+      socket.emit("stop_everyone", src, index, button);
     }
   }
 
@@ -43,118 +67,88 @@ class App extends Component {
       sound: new Howl({
         src: [webm, mp3],
         sprite: {
-          loop1: [
-            108000,
-            10055.98639455782
-          ],
-          loop2: [
-            120000,
-            10055.986394557835
-          ],
-          loop3: [
-            132000,
-            10055.986394557835
-          ],
-          loop4: [
-            144000,
-            10055.986394557835
-          ],
-          loop5: [
-            156000,
-            10055.986394557835
-          ],
-          loop6: [
-            168000,
-            10055.986394557835
-          ],
-          loop7: [
-            180000,
-            10055.986394557835
-          ],
-          loop8: [
-            192000,
-            10055.986394557835
-          ],
-          loop9: [
-            204000,
-            10055.986394557835
-          ],
-          loop10: [
-            0,
-            10055.986394557824
-          ],
-          loop11: [
-            12000,
-            10055.986394557824
-          ],
-          loop12: [
-            24000,
-            10055.98639455782
-          ],
-          loop13: [
-            36000,
-            10055.98639455782
-          ],
-          loop14: [
-            48000,
-            10055.98639455782
-          ],
-          loop15: [
-            60000,
-            10055.98639455782
-          ],
-          loop16: [
-            72000,
-            10055.98639455782
-          ],
-          loop17: [
-            84000,
-            10055.98639455782
-          ],
-          loop18: [
-            96000,
-            10055.98639455782
-          ],
+          loop1: [108000, 10055.98639455782],
+          loop2: [120000, 10055.986394557835],
+          loop3: [132000, 10055.986394557835],
+          loop4: [144000, 10055.986394557835],
+          loop5: [156000, 10055.986394557835],
+          loop6: [168000, 10055.986394557835],
+          loop7: [180000, 10055.986394557835],
+          loop8: [192000, 10055.986394557835],
+          loop9: [204000, 10055.986394557835],
+          loop10: [0, 10055.986394557824],
+          loop11: [12000, 10055.986394557824],
+          loop12: [24000, 10055.98639455782],
+          loop13: [36000, 10055.98639455782],
+          loop14: [48000, 10055.98639455782],
+          loop15: [60000, 10055.98639455782],
+          loop16: [72000, 10055.98639455782],
+          loop17: [84000, 10055.98639455782],
+          loop18: [96000, 10055.98639455782],
         },
-          html5: true,
-          loop: true
-        })
-     });
+        html5: true,
+        loop: true,
+      }),
+    });
 
-     // Global Loop.mp3
-     socket.on("message", (src) => {
-        this.state.sound.play(src);
-        console.log("BEFORE", this.state);
-        this.setState({value: src}); // to turn the btn dsiabled for receviers
-        console.log("AFTER", this.state);
-     });
+    //GLOBAL LOOP
+    socket.on("message", (src, index, button) => {
+      //console.log("CLIENT1", src, index, button);
+      const { buttons } = this.state;
+      button.currentState = true; //buttonDisabled
+      //console.log("CLIENT2", src, index, button);
+      //console.log("STATE", this.state.buttons[index]);
+      buttons[index] = button;
+      this.setState({ buttons });
+      this.state.sound.play(src); //playSound
+      //console.log("STATE_After",  this.state.buttons[index]);
+    });
 
-     //Global Delete
-     socket.on("stop_play", (src)=>{
-       console.log("Stop_play_client");
-       this.state.sound.stop(this.state.soundIds[src]);
-       delete this.state.soundIds[src];
-       this.setState({value: ''}); //empty string = falsy
-     });
-    }
+    socket.on("stop_play", (src, index, button) => {
+      //  console.log("CLIENT_STOP1", src, index, button);
+      const { buttons } = this.state;
+      button.currentState = false;
+      //  console.log("CLIENT_STOP2", src, index, button);
+      this.state.sound.stop(this.state.soundIds[src]);
+      delete this.state.soundIds[src];
+      buttons[index] = button;
+      //  console.log("STATE_STOP1", this.state.buttons[index]);
+      this.setState({ buttons });
+      //  console.log("STATE_STOP2", this.state.buttons[index]);
+    });
+  }
 
 
 
-// name =  "Loop 1" //what we see
-// src = "loop1" = this.state.value
-// unique = this.state.value = "loop1"
-// id = "loop1"  
+  // problem1 - initial delay <- Firefox
+  // problem2 -> updating disabled button -> solved ✓
+  // problem3 - internal metronome/counter in seconds
+  // problem4 -> only receivers are disabled, and senders are notified 
+  // problem5 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
+  // problem6 -> metronome/internal timer to work around sound delay
+  // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
+  // problem8 -> Sound state needs to get passed in order for it to work precisely
+  // problem9 -> update loophoria server code
   
 
-  render () {             
+  render() {
+    const { buttons } = this.state;
     return (
       <div className="App">
-          <Button onClick={() => this.Sprite1("loop1")} name="Loop 1" id="loop1" unique={this.state.value} />
-          <Button onClick={() => this.Sprite1("loop2")} name="Loop 2" id="loop2" unique={this.state.value} />          
-      </div> 
+        {buttons.map((button, index) => {
+          return (
+            <Button
+              onClick={() => this.Sprite1(button.name, index, button)}
+              name={button.name} //loop#
+              id={button.name} //loop#
+              key={index} //index number for sounds[index]
+              disabled={button.currentState} //Passes true or false
+            />
+          );
+        })}
+       </div>
     );
   }
-  
 }
 
 export default App;
