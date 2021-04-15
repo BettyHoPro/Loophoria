@@ -3,38 +3,61 @@ import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
-import Button from "./components/Button";
+import Button from "./components/Button"; //
 import "./App.css";
 
-// const socket = io('http://localhost:4000'); //connect to server
-const socket = io('https://loophoria-server.herokuapp.com/');
+const socket = io("https://loophoria-server.herokuapp.com/"); //connect to server
 
 class App extends Component {
   // coz it is class base, so we don't destruct [ state, setState]git
   state = {
     sound: null,
     soundIds: {},
-    value: [], // for disabled btn for other users
+    buttonsInUse: [], //UPDATES SENDER STATE ONLY
+    buttons: [
+      //UPDATES EVERY CLIENT EXCEPT SENDER
+      { name: "loop1", currentState: false },
+      { name: "loop2", currentState: false },
+      { name: "loop3", currentState: false },
+      { name: "loop4", currentState: false },
+      { name: "loop5", currentState: false },
+      { name: "loop6", currentState: false },
+      { name: "loop7", currentState: false },
+      { name: "loop8", currentState: false },
+      { name: "loop9", currentState: false },
+      { name: "loop10", currentState: false },
+      { name: "loop11", currentState: false },
+      { name: "loop12", currentState: false },
+      { name: "loop13", currentState: false },
+      { name: "loop14", currentState: false },
+      { name: "loop15", currentState: false },
+      { name: "loop16", currentState: false },
+    ],
   };
 
-  Sprite1(src) {
+  Sprite1(src, index, button) {
+    const { buttonsInUse } = this.state;
+    
     let value = true;
-
     if (this.state.soundIds[src]) {
       value = false;
-      
     }
 
-    // must to call This = App
     if (value === true) {
+      buttonsInUse.push(index);
       const newSound = this.state.sound.play(src);
-      socket.emit("send_message", src);
-      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound } });
+      this.setState({
+        soundIds: { ...this.state.soundIds, [src]: newSound },
+        buttonsInUse
+      });
+      socket.emit("send_message", src, index, button);
     }
     if (value === false) {
       this.state.sound.stop(this.state.soundIds[src]);
       delete this.state.soundIds[src];
-      socket.emit("stop_everyone", src);
+      const newButtons = buttonsInUse.filter((sound) => sound !== index);
+      this.setState({ buttonsInUse: newButtons });
+      socket.emit("stop_everyone", src, index, button);
     }
   }
 
@@ -68,54 +91,62 @@ class App extends Component {
       }),
     });
 
-    // Global Loop.mp3
-    socket.on("message", (src) => {
-      this.state.sound.play(src);
-      this.setState({ value: [...this.state.value, src] }); // to turn the btn dsiabled for receviers
+    //GLOBAL LOOP
+    socket.on("message", (src, index, button) => {
+      //console.log("CLIENT1", src, index, button);
+      const { buttons } = this.state;
+      button.currentState = true; //buttonDisabled
+      //console.log("CLIENT2", src, index, button);
+      //console.log("STATE", this.state.buttons[index]);
+      buttons[index] = button;
+      this.setState({ buttons });
+      this.state.sound.play(src); //playSound
+      //console.log("STATE_After",  this.state.buttons[index]);
     });
 
-    //Global Delete
-    socket.on("stop_play", (src) => {
+    socket.on("stop_play", (src, index, button) => {
+      //  console.log("CLIENT_STOP1", src, index, button);
+      const { buttons } = this.state;
+      button.currentState = false;
+      //  console.log("CLIENT_STOP2", src, index, button);
       this.state.sound.stop(this.state.soundIds[src]);
       delete this.state.soundIds[src];
-      console.log("ON STOP PLAY...", src);
-      console.log("STATE ARRAY", this.state.value)
-      this.state.value.forEach((x, index) => {
-        if (x === src) {
-          this.state.value.splice(index, 1);
-        }
-      });
-
-      console.log("AFTER STATE ARRAY", this.state.value);
+      buttons[index] = button;
+      //  console.log("STATE_STOP1", this.state.buttons[index]);
+      this.setState({ buttons });
+      //  console.log("STATE_STOP2", this.state.buttons[index]);
     });
   }
 
+
+
   // problem1 - initial delay <- Firefox
-  // problem2 - doesn't update disabled to false , until next button is pressed
+  // problem2 -> updating disabled button -> solved ✓
   // problem3 - internal metronome/counter in seconds
+  // problem4 -> only receivers are disabled, and senders are notified 
+  // problem5 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
+  // problem6 -> metronome/internal timer to work around sound delay
+  // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
+  // problem8 -> Sound state needs to get passed in order for it to work precisely
+  // problem9 -> update loophoria server code
+  
 
   render() {
+    const { buttons } = this.state;
     return (
       <div className="App">
-        <Button
-          onClick={() => this.Sprite1("loop1")}
-          name="Loop 1"
-          id="loop1" 
-          unique={this.state.value} //Passes Array of loops in progress
-        />
-        <Button
-          onClick={() => this.Sprite1("loop2")}
-          name="Loop 2"
-          id="loop2"
-          unique={this.state.value}
-        />
-        <Button
-          onClick={() => this.Sprite1("loop3")}
-          name="Loop 3"
-          id="loop3"
-          unique={this.state.value}
-        />
-      </div>
+        {buttons.map((button, index) => {
+          return (
+            <Button
+              onClick={() => this.Sprite1(button.name, index, button)}
+              name={button.name} //loop#
+              id={button.name} //loop#
+              key={index} //index number for sounds[index]
+              disabled={button.currentState} //Passes true or false
+            />
+          );
+        })}
+       </div>
     );
   }
 }
