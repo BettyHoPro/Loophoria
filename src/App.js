@@ -43,13 +43,15 @@ class App extends Component {
     if (value === true) {
       buttonsInUse.push(index);
       const newSound = this.state.sound.play(src);
-      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }, buttonsInUse });    button.currentState = true;
-      socket.emit("send_message", { src, index, button });
-    } else {
-      button.currentState = false;
-      socket.emit("send_message", { index, button });
-      const myNewSounds = mySounds.filter(sound => sound !== index)
-      this.setState({mySounds: myNewSounds});
+      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }, buttonsInUse });
+      socket.emit("start_message", src, index, button );
+    }
+    if (value === false) {
+      this.state.sound.stop(this.state.soundIds[src]);
+      delete this.state.soundIds[src];
+      const newButtons = buttonsInUse.filter(sound => sound !== index)
+      this.setState({ buttonsInUse: newButtons });
+      socket.emit("stop_message", src, index, button );
     }
 
 
