@@ -3,7 +3,9 @@ import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
-import Button from "./components/Button"; //
+import Button from "./components/Button";
+import Nav from "./components/Nav";
+
 import "./App.css";
 
 const socket = io("https://loophoria-server.herokuapp.com/"); //connect to server
@@ -136,7 +138,11 @@ class App extends Component {
   render() {
     const { buttons } = this.state;
     return (
+   
       <div className="App">
+        <Nav />
+        <body>
+         <header>Test</header>
         {buttons.map((button, index) => {
           return (
             <Button
@@ -148,6 +154,7 @@ class App extends Component {
             />
           );
         })}
+        </body>
        </div>
     );
   }
