@@ -12,8 +12,8 @@ class App extends Component {
   state = {
     sound: null,
     soundIds: {},
-    buttonsInUse: [], //UPDATES LOCALLY ONLY
-    buttons: [
+    buttonsInUse: [], //UPDATES SENDER STATE ONLY
+    buttons: [        //UPDATES EVERY CLIENT EXCEPT SENDER
       { name: "loop1", currentState: false },
       { name: "loop2", currentState: false },
       { name: "loop3", currentState: false },
@@ -30,18 +30,21 @@ class App extends Component {
       { name: "loop14", currentState: false },
       { name: "loop15", currentState: false },
       { name: "loop16", currentState: false }
-    ], // for disabled btn for other users
+    ],
   };
 
-  Sprite1(index, button) {
-    const { buttons, mySounds } = this.state;
-    // buttons[index].currentState = true;
-    // this.setState({buttons})
-    if (!mySounds.includes(index)) {
-      mySounds.push(index);
-      this.setState({mySounds});
-      button.currentState = true;
-      socket.emit("send_message", { index, button });
+  Sprite1(src, index, button) {
+    const { buttonsInUse } = this.state;
+    let value = true;
+    if (this.state.soundIds[src]) {
+      value = false;
+    }
+
+    if (value === true) {
+      buttonsInUse.push(index);
+      const newSound = this.state.sound.play(src);
+      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }, buttonsInUse });    button.currentState = true;
+      socket.emit("send_message", { src, index, button });
     } else {
       button.currentState = false;
       socket.emit("send_message", { index, button });
