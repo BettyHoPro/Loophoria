@@ -12,13 +12,24 @@ class App extends Component {
   state = {
     sound: null,
     soundIds: {},
-    mySounds: [],
+    buttonsInUse: [], //UPDATES LOCALLY ONLY
     buttons: [
       { name: "loop1", currentState: false },
       { name: "loop2", currentState: false },
       { name: "loop3", currentState: false },
       { name: "loop4", currentState: false },
-      { name: "loop5", currentState: false }
+      { name: "loop5", currentState: false },
+      { name: "loop6", currentState: false },
+      { name: "loop7", currentState: false },
+      { name: "loop8", currentState: false },
+      { name: "loop9", currentState: false },
+      { name: "loop10", currentState: false },
+      { name: "loop11", currentState: false },
+      { name: "loop12", currentState: false },
+      { name: "loop13", currentState: false },
+      { name: "loop14", currentState: false },
+      { name: "loop15", currentState: false },
+      { name: "loop16", currentState: false }
     ], // for disabled btn for other users
   };
 
