@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Howl } from "howler";
 import { io } from "socket.io-client";
-import webm from "./tracks/sprite.webm";   //HTML5 Audio API
-import mp3 from "./tracks/sprite.mp3";     //Web Audio API
-import Button from "./components/Button";  //
+import webm from "./tracks/sprite.webm"; //HTML5 Audio API
+import mp3 from "./tracks/sprite.mp3"; //Web Audio API
+import Button from "./components/Button"; //
 import "./App.css";
 const socket = io("http://localhost:4000"); //connect to server
 
@@ -13,7 +13,8 @@ class App extends Component {
     sound: null,
     soundIds: {},
     buttonsInUse: [], //UPDATES SENDER STATE ONLY
-    buttons: [        //UPDATES EVERY CLIENT EXCEPT SENDER
+    buttons: [
+      //UPDATES EVERY CLIENT EXCEPT SENDER
       { name: "loop1", currentState: false },
       { name: "loop2", currentState: false },
       { name: "loop3", currentState: false },
@@ -29,7 +30,7 @@ class App extends Component {
       { name: "loop13", currentState: false },
       { name: "loop14", currentState: false },
       { name: "loop15", currentState: false },
-      { name: "loop16", currentState: false }
+      { name: "loop16", currentState: false },
     ],
   };
 
@@ -43,15 +44,18 @@ class App extends Component {
     if (value === true) {
       buttonsInUse.push(index);
       const newSound = this.state.sound.play(src);
-      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }, buttonsInUse });
-      socket.emit("start_message", src, index, button );
+      this.setState({
+        soundIds: { ...this.state.soundIds, [src]: newSound },
+        buttonsInUse,
+      });
+      socket.emit("start_message", src, index, button);
     }
     if (value === false) {
       this.state.sound.stop(this.state.soundIds[src]);
       delete this.state.soundIds[src];
-      const newButtons = buttonsInUse.filter(sound => sound !== index)
+      const newButtons = buttonsInUse.filter((sound) => sound !== index);
       this.setState({ buttonsInUse: newButtons });
-      socket.emit("stop_message", src, index, button );
+      socket.emit("stop_message", src, index, button);
     }
   }
 
@@ -85,37 +89,32 @@ class App extends Component {
       }),
     });
 
-    // Global Loop.mp3
+    //GLOBAL LOOP
     socket.on("message", (src, index, button) => {
-   //console.log("CLIENT1", src, index, button); 
-   const { buttons } = this.state;
-   button.currentState = true; //buttonDisabled 
-   //console.log("CLIENT2", src, index, button);       
-   //console.log("STATE", this.state.buttons[index]);       
-   buttons[index] = button; 
-   this.setState({ buttons });
-   this.state.sound.play(src); //playSound
-   //console.log("STATE_After",  this.state.buttons[index]); 
+      //console.log("CLIENT1", src, index, button);
+      const { buttons } = this.state;
+      button.currentState = true; //buttonDisabled
+      //console.log("CLIENT2", src, index, button);
+      //console.log("STATE", this.state.buttons[index]);
+      buttons[index] = button;
+      this.setState({ buttons });
+      this.state.sound.play(src); //playSound
+      //console.log("STATE_After",  this.state.buttons[index]);
     });
 
-
-
-
-    //Global Delete
-    // socket.on("stop_play", (src) => {
-    //   this.state.sound.stop(this.state.soundIds[src]);
-    //   delete this.state.soundIds[src];
-    //   console.log("ON STOP PLAY...", src);
-    //   console.log("STATE ARRAY", this.state.value);
-    //   this.state.value.forEach((x, index) => {
-    //     if (x === src) {
-    //       this.state.value.splice(index, 1);
-    //     }
-    //   });
-
-    //   console.log("AFTER STATE ARRAY", this.state.value);
-    // });
-  // }
+    socket.on("stop_play", (src, index, button) => {
+      //  console.log("CLIENT_STOP1", src, index, button);
+      const { buttons } = this.state;
+      button.currentState = false;
+      //  console.log("CLIENT_STOP2", src, index, button);
+      this.state.sound.stop(this.state.soundIds[src]);
+      delete this.state.soundIds[src];
+      buttons[index] = button;
+      //  console.log("STATE_STOP1", this.state.buttons[index]);
+      this.setState({ buttons });
+      //  console.log("STATE_STOP2", this.state.buttons[index]);
+    });
+  }
 
   // problem1 - initial delay <- Firefox
   // problem2 - doesn't update disabled to false , until next button is pressed
