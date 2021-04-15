@@ -5,7 +5,8 @@ import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button"; //
 import "./App.css";
-const socket = io("http://localhost:4000"); //connect to server
+
+const socket = io("https://loophoria-server.herokuapp.com/"); //connect to server
 
 class App extends Component {
   // coz it is class base, so we don't destruct [ state, setState]git
