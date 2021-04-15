@@ -142,7 +142,6 @@ class App extends Component {
       <div className="App">
         <Nav />
         <body>
-         <header>Test</header>
         {buttons.map((button, index) => {
           return (
             <Button
