@@ -36,6 +36,7 @@ class App extends Component {
 
   Sprite1(src, index, button) {
     const { buttonsInUse } = this.state;
+    
     let value = true;
     if (this.state.soundIds[src]) {
       value = false;
@@ -46,7 +47,7 @@ class App extends Component {
       const newSound = this.state.sound.play(src);
       this.setState({
         soundIds: { ...this.state.soundIds, [src]: newSound },
-        buttonsInUse,
+        buttonsInUse
       });
       socket.emit("send_message", src, index, button);
     }
@@ -55,7 +56,7 @@ class App extends Component {
       delete this.state.soundIds[src];
       const newButtons = buttonsInUse.filter((sound) => sound !== index);
       this.setState({ buttonsInUse: newButtons });
-      socket.emit("stop_message", src, index, button);
+      socket.emit("stop_everyone", src, index, button);
     }
   }
 
@@ -116,15 +117,16 @@ class App extends Component {
     });
   }
 
-  // problem1 - initial delay <- Firefox
-  // problem2 - doesn't update disabled to false , until next button is pressed
-  // problem3 - internal metronome/counter in seconds
-  //everyone -> but only receivers are disabled, and senders are notified
-  //if you join a session/leave a seesion 
-  //your button history is deleted
-  //metronome
-  //on-sync timing playback
 
+
+  // problem1 - initial delay <- Firefox
+  // problem2 -> updating disabled button -> solved ✓
+  // problem3 - internal metronome/counter in seconds
+  // problem4 -> only receivers are disabled, and senders are notified 
+  // problem5 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
+  // problem6 -> metronome/internal timer to work around sound delay
+  // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
+  // problem8 -> Sound state needs to get passed in order for it to work precisely
 
 
   render() {
