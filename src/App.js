@@ -146,6 +146,7 @@ class App extends Component {
    
       <div className="App">
         <Nav />
+        <div className="btns-pannel">
         {buttons.map((button, index) => {
           return (
             <Button
@@ -159,6 +160,7 @@ class App extends Component {
             />
           );
         })}
+        </div>
         <Footer />
        </div>
     );

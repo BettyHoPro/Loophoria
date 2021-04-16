@@ -6,7 +6,7 @@
   align-items: center;
   height: 40px;
   z-index:2;
-  width: 100%;
+  width: 100vw;
   color: white;
   top: 0%;
 }
@@ -23,6 +23,16 @@
 }
 
 .nav-item {
-  padding-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  padding-right: 1rem;
+
 }
+
+.account, .invite{
+  width: 40px;
+}
+/* .invite {
+  width: 30px;
+} */
 

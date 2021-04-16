@@ -1,7 +1,10 @@
 import React from "react";
+import "./Nav.css";
 
 import logo from '../assets/logo.png';
-import "./Nav.css";
+import account from '../assets/account.png';
+import invite from '../assets/invite.png';
+
 
 export default function Nav(props) {
 
@@ -11,8 +14,13 @@ export default function Nav(props) {
         <img class="logo" src={logo} alt={"logo"}/>
       </div>
       <div class="nav-right" > 
-        <span class="nav-item">invite</span>
-        <span class="nav-item">account</span>
+        <div class="nav-item">
+        <img class="invite" src={invite} alt={"invite"}/>
+          <span>Invite</span></div> 
+        <div class="nav-item">
+        <img class="account" src={account} alt={"account"}/>
+          <span>Account</span>
+          </div>
       </div>
     </nav>
   );
