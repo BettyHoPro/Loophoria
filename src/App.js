@@ -9,7 +9,7 @@ import "./App.css";
 const socket = io("http://localhost:4000"); // local server URL
 
 class App extends Component {
-  // coz it is class base, so we don't destruct [ state, setState]git
+  // coz it is class base, so we don't destruct [ state, setState ]git
   state = {
     sound: null,
     soundIds: {},
@@ -35,30 +35,28 @@ class App extends Component {
     ],
   };
 
-  
   Sprite1(src, index, button) {
     const { buttonsInUse } = this.state;
-    
-    
+
     //SWITCH LOGIC FOR IF STATEMENTS
-    let value = true;  
+    let value = true;
     if (this.state.soundIds[src]) {
       value = false;
     }
-
 
     //SENDING CLIENT - START LOOP
     if (value === true) {
       //Start local sound
       const newSound = this.state.sound.play(src);
       //Add loop index to buttonsInUse
-      console.log("1Buttons In Use", this.state.buttonsInUse)      
+      console.log("1Buttons In Use", this.state.buttonsInUse);
       buttonsInUse.push(index);
       //update state
-      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound },
+      this.setState({
+        soundIds: { ...this.state.soundIds, [src]: newSound },
         buttonsInUse,
       });
-      console.log("2Buttons In Use", this.state.buttonsInUse)      
+      console.log("2Buttons In Use", this.state.buttonsInUse);
 
       //Transmit start msg
       socket.emit("send_message", src, index, button);
@@ -71,36 +69,30 @@ class App extends Component {
 
       //Delete sound Id
       delete this.state.soundIds[src];
-
       //Remove loop index from buttonsInUse
       const newButtons = buttonsInUse.filter((sound) => sound !== index);
       this.setState({ buttonsInUse: newButtons });
-
       //Transmit stop msg
       socket.emit("stop_everyone", src, index, button);
     }
   }
 
-
-
-//   componentDidMount(){
-//     if (condition) {
-//         window.onbeforeunload = function() {
-//             return true;
-//         };
-//     }
-// }
-
-// componentDidUnmount(){
-//     window.onbeforeunload = null;
-// }
-
-
-
-  // this is like useEffect not to cause re-render
+  componentDidUnmount() {
+    window.onbeforeunload = null;
+  }
+  
+  // this is like useEffect, controlled re-render
   componentDidMount() {
-    this.setState({...this.state,
-      sound: new Howl({  //maybe put this directly in state
+    window.onbeforeunload = function () {
+      return true;
+    };
+    const { buttonsInUse } = this.state;
+    socket.emit("enable_buttons", buttonsInUse);
+    
+    this.setState({
+      ...this.state,
+      sound: new Howl({
+        //maybe put this directly in state
         src: [webm, mp3],
         sprite: {
           loop1: [108000, 10055.98639455782],
@@ -127,20 +119,21 @@ class App extends Component {
       }),
     });
 
-
     //RECEIVING CLIENT - START LOOP
-    socket.on("message", (src, index, button) => {      
-      const { buttons } = this.state;          
+    socket.on("message", (src, index, button) => {
+      const { buttons } = this.state;
       //disable button
-      button.currentState = true; 
+      button.currentState = true;
       //change button(s) state
       buttons[index] = button;
       //update state
       const newSound = this.state.sound.play(src);
-      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }, buttons})
+      this.setState({
+        soundIds: { ...this.state.soundIds, [src]: newSound },
+        buttons,
+      });
       //play sound
     });
-
 
     //RECEIVING CLIENT - STOP LOOP
     socket.on("stop_play", (src, index, button) => {
@@ -151,21 +144,44 @@ class App extends Component {
       buttons[index] = button;
       //update state
       this.setState({ buttons });
-      //stop sound 
+      //stop sound
       this.state.sound.stop(this.state.soundIds[src]);
       //delete sound Id
       delete this.state.soundIds[src];
     });
+
+    socket.on("client_disconnected", (buttonsToEnable) => {
+      const { buttons } = this.state;
+      console.log("DROPPED", this.state.buttons);
+      //enable buttons or stop sounds completely
+      for (let button of buttons) {
+        buttonsToEnable.forEach((id) => {
+          if (id === buttons.indexOf(button)) {
+            button.currentState = false;
+            buttons[id] = button;
+          }
+        });
+      }
+      //update state
+      alert("A JamPal left the session, You now have control. ;)!");      
+      this.setState({ buttons });
+      console.log("DROPPED", this.state.buttons);
+    });
   }
 
-  // -> initial delay <- Firefox ✓
-  // -> updating disabled button -> solved ✓
-  // -> turning on multiple buttons, and turning 1 off, disables all sounds (sound state) ✓ 
-  // -> if you disconnect from server. it updates buttonState to false [local button history deleted]
-  // -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
-  // -> auto-rooms -> Join by QR Code
+  // -> If you disconnect from server. it updates buttonState to false [local button history deleted]
+  // -> When server shuts down. Stop browser get requests (not a huge problem, it just times out)
+  // -> Auto-rooms -> Join by QR Code (requires a session i'd)
 
-  // -> good loops   
+  // -> On connect, assign a session ID and participant ID/Count
+  // -> Create a new room, after 4 connections
+
+  // -> CSS should be based off of is the loop playing? and is it disabled?
+  // -> if disabled and playing. sending client has control. change the color to -disabled
+  // -> if enabled and playing, local client has, or has been given control, change color to -enabled/playing
+  // -> if enabled and no sound, color is original color.
+
+  // -> good loops
   // -> internal metronome/counter in seconds
   // -> metronome/internal timer to work around sound delay
   // -> Add Dyno
