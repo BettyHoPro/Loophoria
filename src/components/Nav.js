@@ -6,7 +6,7 @@ import "./Nav.css";
 export default function Nav(props) {
 
   return (
-    <nav class="nav-bar" id="top-page">
+    <nav class="nav-bar">
       <div >
         <img class="logo" src={logo} alt={"logo"}/>
       </div>

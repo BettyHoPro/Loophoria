@@ -5,6 +5,7 @@ import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 
 import "./App.css";
 
@@ -145,7 +146,6 @@ class App extends Component {
    
       <div className="App">
         <Nav />
-        {/* <body> */}
         {buttons.map((button, index) => {
           return (
             <Button
@@ -159,7 +159,7 @@ class App extends Component {
             />
           );
         })}
-        {/* </body> */}
+        <Footer />
        </div>
     );
   }
