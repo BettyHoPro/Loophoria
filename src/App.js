@@ -35,6 +35,9 @@ class App extends Component {
       { name: "loop14", currentState: false },
       { name: "loop15", currentState: false },
       { name: "loop16", currentState: false },
+      { name: "loop17", currentState: false },
+      { name: "loop18", currentState: false },
+      { name: "loop19", currentState: false }
     ],
   };
 
@@ -89,6 +92,7 @@ class App extends Component {
           loop16: [72000, 10055.98639455782],
           loop17: [84000, 10055.98639455782],
           loop18: [96000, 10055.98639455782],
+          loop19: [12000, 10055.986394557824],
         },
         html5: true,
         loop: true,

@@ -1,21 +1,39 @@
 .btn-loop {
   text-decoration: none;
-  font-size: 25px;
+  font-size: 20px;
   color: #393939;
   font-family: "Do Hyeon", sans-serif;
   letter-spacing: 2px;
   border: 3px solid rgb(255, 255, 255);
   /* padding: 3vw; */
-  width: 120px;
-  height: 70px;
+  width: 10%;
+  height: 80px;
 }
-.btn-loop[disabled] {
+/* .btn-loop[disabled] {
   background-color: white  !important;
 }
+
+.btn-loop:active {
+  background-color: red  !important;
+}
+
+.btn-loop:target {
+  background-color: pink  !important;
+}
+.btn-loop.selected {
+  background-color: pink  !important;
+} */
+
+
+
 
 /* .btn-loop:hover {
  
 } */
+
+.btn-loop:visited{
+  background-color: red;
+}
 
 .Start {
   /* width: 40px;
@@ -27,9 +45,9 @@
   background-color: #EC407A; 
 }
 
-.loop1[disabled] {
+/* .loop1[disabled] {
   background-color: white  !important;
-}
+} */
 
 .loop2 {
   background-color: #AB47BC; 
@@ -91,6 +109,18 @@
 #start, .Button {
   background-color: red;
 } */
+
+.loop17 {
+  background-color: #8D6E63;
+}
+.loop18 {
+  background-color: #BDBDBD;
+}
+
+.loop19 {
+  background-color: #78909C;
+}
+
 
 
 
