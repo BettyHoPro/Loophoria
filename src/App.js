@@ -76,49 +76,40 @@ class App extends Component {
       socket.emit("stop_everyone", src, index, button);
     }
   }
-
-  componentDidUnmount() {
-    window.onbeforeunload = null;
-  }
   
-  // this is like useEffect, controlled re-render
-  componentDidMount() {
-    window.onbeforeunload = function () {
-      return true;
-    };
-    const { buttonsInUse } = this.state;
-    socket.emit("enable_buttons", buttonsInUse);
     
-    this.setState({
-      ...this.state,
-      sound: new Howl({
-        //maybe put this directly in state
-        src: [webm, mp3],
-        sprite: {
-          loop1: [108000, 10055.98639455782],
-          loop2: [120000, 10055.986394557835],
-          loop3: [132000, 10055.986394557835],
-          loop4: [144000, 10055.986394557835],
-          loop5: [156000, 10055.986394557835],
-          loop6: [168000, 10055.986394557835],
-          loop7: [180000, 10055.986394557835],
-          loop8: [192000, 10055.986394557835],
-          loop9: [204000, 10055.986394557835],
-          loop10: [0, 10055.986394557824],
-          loop11: [12000, 10055.986394557824],
-          loop12: [24000, 10055.98639455782],
-          loop13: [36000, 10055.98639455782],
-          loop14: [48000, 10055.98639455782],
-          loop15: [60000, 10055.98639455782],
-          loop16: [72000, 10055.98639455782],
-          loop17: [84000, 10055.98639455782],
-          loop18: [96000, 10055.98639455782],
+  componentDidMount() {   
+    //window.addEventListener("beforeunload", () => socket.emit("enable_buttons", this.state.buttonsInUse));
+       
+      this.setState({
+        ...this.state,
+        sound: new Howl({
+          src: [webm, mp3],
+          sprite: {
+            loop1: [108000, 10055.98639455782],
+            loop2: [120000, 10055.986394557835],
+            loop3: [132000, 10055.986394557835],
+            loop4: [144000, 10055.986394557835],
+            loop5: [156000, 10055.986394557835],
+            loop6: [168000, 10055.986394557835],
+            loop7: [180000, 10055.986394557835],
+            loop8: [192000, 10055.986394557835],
+            loop9: [204000, 10055.986394557835],
+            loop10: [0, 10055.986394557824],
+            loop11: [12000, 10055.986394557824],
+            loop12: [24000, 10055.98639455782],
+            loop13: [36000, 10055.98639455782],
+            loop14: [48000, 10055.98639455782],
+            loop15: [60000, 10055.98639455782],
+            loop16: [72000, 10055.98639455782],
+            loop17: [84000, 10055.98639455782],
+            loop18: [96000, 10055.98639455782],
         },
         html5: true,
         loop: true,
       }),
     });
-
+    
     //RECEIVING CLIENT - START LOOP
     socket.on("message", (src, index, button) => {
       const { buttons } = this.state;
@@ -134,7 +125,7 @@ class App extends Component {
       });
       //play sound
     });
-
+    
     //RECEIVING CLIENT - STOP LOOP
     socket.on("stop_play", (src, index, button) => {
       const { buttons } = this.state;
@@ -149,42 +140,28 @@ class App extends Component {
       //delete sound Id
       delete this.state.soundIds[src];
     });
-
-    socket.on("client_disconnected", (buttonsToEnable) => {
-      const { buttons } = this.state;
-      console.log("DROPPED", this.state.buttons);
-      //enable buttons or stop sounds completely
-      for (let button of buttons) {
-        buttonsToEnable.forEach((id) => {
-          if (id === buttons.indexOf(button)) {
-            button.currentState = false;
-            buttons[id] = button;
-          }
-        });
-      }
-      //update state
-      alert("A JamPal left the session, You now have control. ;)!");      
-      this.setState({ buttons });
-      console.log("DROPPED", this.state.buttons);
-    });
-  }
-
-  // -> If you disconnect from server. it updates buttonState to false [local button history deleted]
-  // -> When server shuts down. Stop browser get requests (not a huge problem, it just times out)
-  // -> Auto-rooms -> Join by QR Code (requires a session i'd)
-
-  // -> On connect, assign a session ID and participant ID/Count
-  // -> Create a new room, after 4 connections
-
-  // -> CSS should be based off of is the loop playing? and is it disabled?
-  // -> if disabled and playing. sending client has control. change the color to -disabled
-  // -> if enabled and playing, local client has, or has been given control, change color to -enabled/playing
-  // -> if enabled and no sound, color is original color.
-
-  // -> good loops
-  // -> internal metronome/counter in seconds
-  // -> metronome/internal timer to work around sound delay
-  // -> Add Dyno
+    
+  //   socket.on("client_disconnected", (buttonsToEnable) => {
+  //     const { buttons } = this.state;
+  //     //enable buttons or stop sounds completely
+  //     console.log("REceiving", buttonsToEnable);
+  //     for (let button of buttons) {
+  //       console.log("HERE", button);
+  //       buttonsToEnable.forEach((id) => {
+  //         console.log("2-HERE", id);
+  //         if (id === buttons.indexOf(button)) {
+  //           console.log("3-HERE");
+  //           button.currentState = false;
+  //           buttons[id] = button;
+  //         }
+  //       });
+  //     }
+  //     //update state
+  //     alert(`A JamPal left the session,\nYou now have control. ;)!`);      
+  //     this.setState({ buttons });
+  //   });
+   }
+  
 
   render() {
     const { buttons } = this.state;
