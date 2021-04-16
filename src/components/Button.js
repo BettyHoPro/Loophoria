@@ -7,10 +7,9 @@ export default function Button(props) {
   return (
     <button
     id={props.id}
-    class= {`btn-loop ${props.index === 0 ? 'btn-start' : null}`}
+    class= {`btn-loop ${props.name}`}
     onClick={props.onClick}
     disabled={props.disabled}
-    style={{ backgroundColor: buttonProps.backgroundColor}}
     >{buttonProps.name}{props.index}
     </button>
   );
