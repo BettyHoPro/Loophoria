@@ -7,11 +7,11 @@ export default function Button(props) {
   return (
     <button
     id={props.id}
-    class="btn-loop"
+    class= {`btn-loop ${props.index === 0 ? 'btn-start' : null}`}
     onClick={props.onClick}
     disabled={props.disabled}
     style={{ backgroundColor: buttonProps.backgroundColor}}
-    >{buttonProps.name}
+    >{buttonProps.name}{props.index}
     </button>
   );
 }

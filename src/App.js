@@ -150,6 +150,7 @@ class App extends Component {
               buttonProps={button}
               id={button.name} //loop#
               key={index} //index number for sounds[index]
+              index={index}
               disabled={button.currentState} //Passes true or false
             />
           );
