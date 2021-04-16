@@ -11,10 +11,9 @@
   top: 0%;
 }
 
-.nav-logo {
-  font-family: 'Bungee', sans-serif;
-  font-size: 2em;
-} 
+.logo {
+  width: 250px;
+}
 .nav-right {
   display: flex;
   align-items: center;
