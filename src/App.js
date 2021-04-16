@@ -161,9 +161,8 @@ class App extends Component {
 
   // problem1 - initial delay <- Firefox ✓
   // problem2 -> updating disabled button -> solved ✓
-  // problem3 - internal metronome/counter in seconds
-  // problem4 -> only receivers are disabled, and senders are notified  
-  // problem5 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
+  // problem3 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
+  // problem4 - internal metronome/counter in seconds   
   // problem6 -> metronome/internal timer to work around sound delay
   // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
   // problem8 -> Sound state needs to get passed in order for it to work precisely
