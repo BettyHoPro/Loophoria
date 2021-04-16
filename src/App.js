@@ -51,16 +51,15 @@ class App extends Component {
     if (value === true) {
       //Start local sound
       const newSound = this.state.sound.play(src);
-      
       //Add loop index to buttonsInUse
+      console.log("1Buttons In Use", this.state.buttonsInUse)      
       buttonsInUse.push(index);
-      
       //update state
-      this.setState({
-        soundIds: { ...this.state.soundIds, [src]: newSound },
+      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound },
         buttonsInUse,
       });
-      
+      console.log("2Buttons In Use", this.state.buttonsInUse)      
+
       //Transmit start msg
       socket.emit("send_message", src, index, button);
     }
@@ -137,9 +136,9 @@ class App extends Component {
       //change button(s) state
       buttons[index] = button;
       //update state
-      this.setState({ buttons });
+      const newSound = this.state.sound.play(src);
+      this.setState({ soundIds: { ...this.state.soundIds, [src]: newSound }, buttons})
       //play sound
-      this.state.sound.play(src); 
     });
 
 
@@ -159,14 +158,17 @@ class App extends Component {
     });
   }
 
-  // problem1 - initial delay <- Firefox ✓
-  // problem2 -> updating disabled button -> solved ✓
-  // problem3 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
-  // problem4 - internal metronome/counter in seconds   
-  // problem6 -> metronome/internal timer to work around sound delay
-  // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
-  // problem8 -> Sound state needs to get passed in order for it to work precisely
-  // problem9 -> update loophoria server code
+  // -> initial delay <- Firefox ✓
+  // -> updating disabled button -> solved ✓
+  // -> turning on multiple buttons, and turning 1 off, disables all sounds (sound state) ✓ 
+  // -> if you disconnect from server. it updates buttonState to false [local button history deleted]
+  // -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
+  // -> auto-rooms -> Join by QR Code
+
+  // -> good loops   
+  // -> internal metronome/counter in seconds
+  // -> metronome/internal timer to work around sound delay
+  // -> Add Dyno
 
   render() {
     const { buttons } = this.state;
