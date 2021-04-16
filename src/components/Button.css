@@ -6,11 +6,15 @@
   background-color: #fff069;
   letter-spacing: 2px;
   border: 3px solid rgb(255, 255, 255);
-  padding: 3.4vw;
+  padding: 3vw;
 }
-.btn-loop:selection {
+/* .btn-loop::selection {
   background-color: red;
 }
+
+#start, .Button {
+  background-color: red;
+} */
 
 
 

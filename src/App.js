@@ -18,23 +18,23 @@ class App extends Component {
     buttonsInUse: [], //UPDATES SENDER STATE ONLY
     buttons: [
       //UPDATES EVERY CLIENT EXCEPT SENDER
-      { name: "Start", currentState: false },
-      { name: "loop1", currentState: false },
-      { name: "loop2", currentState: false },
-      { name: "loop3", currentState: false },
-      { name: "loop4", currentState: false },
-      { name: "loop5", currentState: false },
-      { name: "loop6", currentState: false },
-      { name: "loop7", currentState: false },
-      { name: "loop8", currentState: false },
-      { name: "loop9", currentState: false },
-      { name: "loop10", currentState: false },
-      { name: "loop11", currentState: false },
-      { name: "loop12", currentState: false },
-      { name: "loop13", currentState: false },
-      { name: "loop14", currentState: false },
-      { name: "loop15", currentState: false },
-      { name: "loop16", currentState: false },
+      { name: "Start", currentState: false, backgroundColor: "red" },
+      { name: "loop1", currentState: false, backgroundColor: "purple" },
+      { name: "loop2", currentState: false, backgroundColor: "green" },
+      { name: "loop3", currentState: false, backgroundColor: "red" },
+      { name: "loop4", currentState: false, backgroundColor: "red" },
+      { name: "loop5", currentState: false, backgroundColor: "red" },
+      { name: "loop6", currentState: false , backgroundColor: "red"},
+      { name: "loop7", currentState: false , backgroundColor: "red"},
+      { name: "loop8", currentState: false , backgroundColor: "red"},
+      { name: "loop9", currentState: false , backgroundColor: "red"},
+      { name: "loop10", currentState: false , backgroundColor: "red"},
+      { name: "loop11", currentState: false , backgroundColor: "red"},
+      { name: "loop12", currentState: false , backgroundColor: "red"},
+      { name: "loop13", currentState: false , backgroundColor: "red"},
+      { name: "loop14", currentState: false , backgroundColor: "red"},
+      { name: "loop15", currentState: false , backgroundColor: "red"},
+      { name: "loop16", currentState: false , backgroundColor: "red"},
     ],
   };
 
@@ -141,19 +141,20 @@ class App extends Component {
    
       <div className="App">
         <Nav />
-        <body>
+        {/* <body> */}
         {buttons.map((button, index) => {
           return (
             <Button
               onClick={() => this.Sprite1(button.name, index, button)}
               name={button.name} //loop#
+              buttonProps={button}
               id={button.name} //loop#
               key={index} //index number for sounds[index]
               disabled={button.currentState} //Passes true or false
             />
           );
         })}
-        </body>
+        {/* </body> */}
        </div>
     );
   }
