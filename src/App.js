@@ -8,8 +8,6 @@ import "./App.css";
 //const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
 const socket = io("http://localhost:4000"); // local server URL
 
-
-
 class App extends Component {
   // coz it is class base, so we don't destruct [ state, setState]git
   state = {
@@ -37,36 +35,73 @@ class App extends Component {
     ],
   };
 
+  
   Sprite1(src, index, button) {
     const { buttonsInUse } = this.state;
     
-    let value = true;
+    
+    //SWITCH LOGIC FOR IF STATEMENTS
+    let value = true;  
     if (this.state.soundIds[src]) {
       value = false;
     }
 
+
+    //SENDING CLIENT - START LOOP
     if (value === true) {
-      buttonsInUse.push(index);
+      //Start local sound
       const newSound = this.state.sound.play(src);
+      
+      //Add loop index to buttonsInUse
+      buttonsInUse.push(index);
+      
+      //update state
       this.setState({
         soundIds: { ...this.state.soundIds, [src]: newSound },
-        buttonsInUse
+        buttonsInUse,
       });
+      
+      //Transmit start msg
       socket.emit("send_message", src, index, button);
     }
+
+    //SENDING CLIENT - STOP LOOP
     if (value === false) {
+      //Stop local sound
       this.state.sound.stop(this.state.soundIds[src]);
+
+      //Delete sound Id
       delete this.state.soundIds[src];
+
+      //Remove loop index from buttonsInUse
       const newButtons = buttonsInUse.filter((sound) => sound !== index);
       this.setState({ buttonsInUse: newButtons });
+
+      //Transmit stop msg
       socket.emit("stop_everyone", src, index, button);
     }
   }
 
+
+
+//   componentDidMount(){
+//     if (condition) {
+//         window.onbeforeunload = function() {
+//             return true;
+//         };
+//     }
+// }
+
+// componentDidUnmount(){
+//     window.onbeforeunload = null;
+// }
+
+
+
   // this is like useEffect not to cause re-render
   componentDidMount() {
-    this.setState({
-      sound: new Howl({
+    this.setState({...this.state,
+      sound: new Howl({  //maybe put this directly in state
         src: [webm, mp3],
         sprite: {
           loop1: [108000, 10055.98639455782],
@@ -93,45 +128,46 @@ class App extends Component {
       }),
     });
 
-    //GLOBAL LOOP
-    socket.on("message", (src, index, button) => {
-      //console.log("CLIENT1", src, index, button);
-      const { buttons } = this.state;
-      button.currentState = true; //buttonDisabled
-      //console.log("CLIENT2", src, index, button);
-      //console.log("STATE", this.state.buttons[index]);
+
+    //RECEIVING CLIENT - START LOOP
+    socket.on("message", (src, index, button) => {      
+      const { buttons } = this.state;          
+      //disable button
+      button.currentState = true; 
+      //change button(s) state
       buttons[index] = button;
+      //update state
       this.setState({ buttons });
-      this.state.sound.play(src); //playSound
-      //console.log("STATE_After",  this.state.buttons[index]);
+      //play sound
+      this.state.sound.play(src); 
     });
 
+
+    //RECEIVING CLIENT - STOP LOOP
     socket.on("stop_play", (src, index, button) => {
-        console.log("CLIENT_STOP1", src, index, button);
       const { buttons } = this.state;
+      //enable button
       button.currentState = false;
-        console.log("CLIENT_STOP2", src, index, button);
-      this.state.sound.stop(this.state.soundIds[src]);
-      delete this.state.soundIds[src];
+      //change button(s) state
       buttons[index] = button;
-        console.log("STATE_STOP1", this.state.buttons[index]);
+      //update state
       this.setState({ buttons });
-        console.log("STATE_STOP2", this.state.buttons[index]);
+      //stop sound 
+      this.state.sound.stop(this.state.soundIds[src]);
+      //delete sound Id
+      delete this.state.soundIds[src];
     });
   }
 
-
-
-  // problem1 - initial delay <- Firefox
+  // problem1 - initial delay <- Firefox ✓
   // problem2 -> updating disabled button -> solved ✓
   // problem3 - internal metronome/counter in seconds
-  // problem4 -> only receivers are disabled, and senders are notified 
+  // problem4 -> only receivers are disabled, and senders are notified  
   // problem5 -> if you disconnect from server. it updates buttonState to false [local button history deleted]
   // problem6 -> metronome/internal timer to work around sound delay
   // problem7 -> when server shuts down. Stop browser get requests (not a huge problem, it just times out)
   // problem8 -> Sound state needs to get passed in order for it to work precisely
   // problem9 -> update loophoria server code
-  
 
   render() {
     const { buttons } = this.state;
@@ -148,7 +184,7 @@ class App extends Component {
             />
           );
         })}
-       </div>
+      </div>
     );
   }
 }
