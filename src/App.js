@@ -5,6 +5,7 @@ import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 
 import "./App.css";
 
@@ -20,7 +21,7 @@ class App extends Component {
       //UPDATES EVERY CLIENT EXCEPT SENDER
       { name: "Start", currentState: false },
       { name: "loop1", currentState: false },
-      { name: "loop2", currentState: false },
+      { name: "loop2", currentState: false  },
       { name: "loop3", currentState: false },
       { name: "loop4", currentState: false },
       { name: "loop5", currentState: false },
@@ -35,6 +36,9 @@ class App extends Component {
       { name: "loop14", currentState: false },
       { name: "loop15", currentState: false },
       { name: "loop16", currentState: false },
+      { name: "loop17", currentState: false },
+      { name: "loop18", currentState: false },
+      { name: "loop19", currentState: false }
     ],
   };
 
@@ -89,6 +93,7 @@ class App extends Component {
           loop16: [72000, 10055.98639455782],
           loop17: [84000, 10055.98639455782],
           loop18: [96000, 10055.98639455782],
+          loop19: [12000, 10055.986394557824],
         },
         html5: true,
         loop: true,
@@ -141,19 +146,20 @@ class App extends Component {
    
       <div className="App">
         <Nav />
-        <body>
         {buttons.map((button, index) => {
           return (
             <Button
               onClick={() => this.Sprite1(button.name, index, button)}
               name={button.name} //loop#
+              buttonProps={button}
               id={button.name} //loop#
               key={index} //index number for sounds[index]
+              index={index}
               disabled={button.currentState} //Passes true or false
             />
           );
         })}
-        </body>
+        <Footer />
        </div>
     );
   }
