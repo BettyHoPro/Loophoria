@@ -37,7 +37,12 @@
   }
 }
 
+.index-body {
+  display: flex;
+  flex-direction: column;
+}
 
 .btns-pannel{
   width: 100vw;
 }
+

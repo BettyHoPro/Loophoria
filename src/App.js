@@ -6,6 +6,7 @@ import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import Visualization from "./components/Visualization";
 
 import "./App.css";
 
@@ -41,6 +42,8 @@ class App extends Component {
       { name: "loop19", currentState: false }
     ],
   };
+  
+  
 
   Sprite1(src, index, button) {
     const { buttonsInUse } = this.state;
@@ -146,6 +149,7 @@ class App extends Component {
    
       <div className="App">
         <Nav />
+        <div className="index-body">
         <div className="btns-pannel">
         {buttons.map((button, index) => {
           return (
@@ -160,6 +164,10 @@ class App extends Component {
             />
           );
         })}
+        </div>
+        <div className="visualization">
+          < Visualization />
+        </div>
         </div>
         <Footer />
        </div>
