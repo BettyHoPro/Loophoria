@@ -13,6 +13,7 @@ class App extends Component {
   state = {
     sound: null,
     soundIds: {},
+    user: [],
     buttonsInUse: [], //UPDATES SENDER STATE ONLY
     buttons: [
       //UPDATES EVERY CLIENT EXCEPT SENDER
@@ -141,28 +142,32 @@ class App extends Component {
       delete this.state.soundIds[src];
     });
     
-  //   socket.on("client_disconnected", (buttonsToEnable) => {
-  //     const { buttons } = this.state;
-  //     //enable buttons or stop sounds completely
-  //     console.log("REceiving", buttonsToEnable);
-  //     for (let button of buttons) {
-  //       console.log("HERE", button);
-  //       buttonsToEnable.forEach((id) => {
-  //         console.log("2-HERE", id);
-  //         if (id === buttons.indexOf(button)) {
-  //           console.log("3-HERE");
-  //           button.currentState = false;
-  //           buttons[id] = button;
-  //         }
-  //       });
-  //     }
-  //     //update state
-  //     alert(`A JamPal left the session,\nYou now have control. ;)!`);      
-  //     this.setState({ buttons });
-  //   });
-   }
-  
+    socket.on("client_disconnected", (buttonsToEnable) => {
+      const { buttons } = this.state;
+      //enable buttons or stop sounds completely
+      for (let button of buttons) {
+        buttonsToEnable.forEach((id) => {
+          if (id === buttons.indexOf(button)) {
+            button.currentState = false;
+            buttons[id] = button;
+          }
+        });
+      }
+      alert(`A JamPal left the session,\nYou now have control. ;)!`);      
+      this.setState({ buttons });
+    });
 
+    socket.on("userId", roomAndId => {
+      if (this.state.user.length === 0) {
+        const { user } = this.state;
+        user.push(roomAndId);
+        this.setState({ user });
+        console.log("USERSTATE", this.state.user);
+      }
+    });
+    
+  }
+  
   render() {
     const { buttons } = this.state;
     return (
