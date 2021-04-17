@@ -1,18 +1,23 @@
 import React from "react";
 import "./Visualization.css";
+// import "./Visual help"
 
-import logo from '../assets/logo.png';
-import account from '../assets/account.png';
-import invite from '../assets/invite.png';
+export default class Visualization extends Component {
+
+   constructor(props) {
+     super(props);
+     this.canvas = React.createRef();
+   }
+
+   draw() {
+        
+  }
 
 
-export default function Visualization(props) {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  const audioCon = new AudioContext();
-
-  return (
-    <nav class="visual-block">
-      
-    </nav>
-  );
+  render (){
+    return() {
+      <canvas class="visual-block" ref={this.canvas}/>;
+    }
+  }
+  
 }

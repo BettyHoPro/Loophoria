@@ -130,8 +130,6 @@ class App extends Component {
     });
   }
 
-
-
   // problem1 - initial delay <- Firefox
   // problem2 -> updating disabled button -> solved ✓
   // problem3 - internal metronome/counter in seconds
@@ -166,7 +164,7 @@ class App extends Component {
         })}
         </div>
         <div className="visualization">
-          < Visualization />
+          <Visualization />
         </div>
         </div>
         <Footer />

@@ -1,5 +1,5 @@
 .visual-block {
-  display: flex;
+  display: block;
   /* margin: auto;  */
   padding: auto auto;
   /* background-color: red;  */
