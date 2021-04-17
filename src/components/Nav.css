@@ -1,0 +1,38 @@
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem;
+  background-color: #1AB1C6; 
+  align-items: center;
+  height: 40px;
+  z-index:2;
+  width: 100vw;
+  color: white;
+  top: 0%;
+}
+
+.logo {
+  width: 250px;
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  padding-right: 1.5rem;
+
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding-right: 1rem;
+
+}
+
+.account, .invite{
+  width: 40px;
+}
+/* .invite {
+  width: 30px;
+} */
+

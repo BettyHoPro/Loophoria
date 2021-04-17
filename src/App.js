@@ -3,7 +3,10 @@ import { Howl } from "howler";
 import { io } from "socket.io-client";
 import webm from "./tracks/sprite.webm"; //HTML5 Audio API
 import mp3 from "./tracks/sprite.mp3"; //Web Audio API
-import Button from "./components/Button"; //
+import Button from "./components/Button";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+
 import "./App.css";
 //const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
 const socket = io("http://localhost:4000"); // local server URL
@@ -17,8 +20,9 @@ class App extends Component {
     buttonsInUse: [], //UPDATES SENDER STATE ONLY
     buttons: [
       //UPDATES EVERY CLIENT EXCEPT SENDER
+      { name: "Start", currentState: false },
       { name: "loop1", currentState: false },
-      { name: "loop2", currentState: false },
+      { name: "loop2", currentState: false  },
       { name: "loop3", currentState: false },
       { name: "loop4", currentState: false },
       { name: "loop5", currentState: false },
@@ -33,6 +37,9 @@ class App extends Component {
       { name: "loop14", currentState: false },
       { name: "loop15", currentState: false },
       { name: "loop16", currentState: false },
+      { name: "loop17", currentState: false },
+      { name: "loop18", currentState: false },
+      { name: "loop19", currentState: false }
     ],
   };
 
@@ -77,34 +84,36 @@ class App extends Component {
       socket.emit("stop_everyone", src, index, button);
     }
   }
-  
-    
-  componentDidMount() {   
+
+  // this is like useEffect not to cause re-render
+  componentDidMount() {
     //window.addEventListener("beforeunload", () => socket.emit("enable_buttons", this.state.buttonsInUse));
-       
-      this.setState({
-        ...this.state,
-        sound: new Howl({
-          src: [webm, mp3],
-          sprite: {
-            loop1: [108000, 10055.98639455782],
-            loop2: [120000, 10055.986394557835],
-            loop3: [132000, 10055.986394557835],
-            loop4: [144000, 10055.986394557835],
-            loop5: [156000, 10055.986394557835],
-            loop6: [168000, 10055.986394557835],
-            loop7: [180000, 10055.986394557835],
-            loop8: [192000, 10055.986394557835],
-            loop9: [204000, 10055.986394557835],
-            loop10: [0, 10055.986394557824],
-            loop11: [12000, 10055.986394557824],
-            loop12: [24000, 10055.98639455782],
-            loop13: [36000, 10055.98639455782],
-            loop14: [48000, 10055.98639455782],
-            loop15: [60000, 10055.98639455782],
-            loop16: [72000, 10055.98639455782],
-            loop17: [84000, 10055.98639455782],
-            loop18: [96000, 10055.98639455782],
+
+    this.setState({
+      ...this.state, 
+      sound: new Howl({
+        src: [webm, mp3],
+        sprite: {
+          Start: [0, 0],
+          loop1: [108000, 10055.98639455782],
+          loop2: [120000, 10055.986394557835],
+          loop3: [132000, 10055.986394557835],
+          loop4: [144000, 10055.986394557835],
+          loop5: [156000, 10055.986394557835],
+          loop6: [168000, 10055.986394557835],
+          loop7: [180000, 10055.986394557835],
+          loop8: [192000, 10055.986394557835],
+          loop9: [204000, 10055.986394557835],
+          loop10: [0, 10055.986394557824],
+          loop11: [12000, 10055.986394557824],
+          loop12: [24000, 10055.98639455782],
+          loop13: [36000, 10055.98639455782],
+          loop14: [48000, 10055.98639455782],
+          loop15: [60000, 10055.98639455782],
+          loop16: [72000, 10055.98639455782],
+          loop17: [84000, 10055.98639455782],
+          loop18: [96000, 10055.98639455782],
+          loop19: [216000, 10055.986394557835],
         },
         html5: true,
         loop: true,
@@ -171,19 +180,26 @@ class App extends Component {
   render() {
     const { buttons } = this.state;
     return (
+   
       <div className="App">
+        <Nav />
+        <div className="btns-pannel">
         {buttons.map((button, index) => {
           return (
             <Button
               onClick={() => this.Sprite1(button.name, index, button)}
               name={button.name} //loop#
+              buttonProps={button}
               id={button.name} //loop#
               key={index} //index number for sounds[index]
+              index={index}
               disabled={button.currentState} //Passes true or false
             />
           );
         })}
-      </div>
+        </div>
+        <Footer />
+       </div>
     );
   }
 }
