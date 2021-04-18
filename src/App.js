@@ -16,7 +16,6 @@ class App extends Component {
     sound: null,
     soundIds: {},
     user: [],
-    buttonsInUse: [], //UPDATES SENDER STATE ONLY
     buttons: [
       //UPDATES EVERY CLIENT EXCEPT SENDER
       { name: "Start", currentState: false },
@@ -43,7 +42,7 @@ class App extends Component {
   };
 
   Sprite1(src, index, button) {
-    const { buttonsInUse, user } = this.state;
+    const { user } = this.state;
 
     //SWITCH LOGIC FOR IF STATEMENTS
     let value = true;
@@ -55,15 +54,11 @@ class App extends Component {
     if (value === true) {
       //Start local sound
       const newSound = this.state.sound.play(src);
-      //Add loop index to buttonsInUse
-      console.log("1Buttons In Use", this.state.buttonsInUse);
-      buttonsInUse.push(index);
+
       //update state
       this.setState({
         soundIds: { ...this.state.soundIds, [src]: newSound },
-        buttonsInUse,
       });
-      console.log("2Buttons In Use", this.state.buttonsInUse);
 
       //Transmit start msg
       socket.emit("send_message", src, index, button, user);
@@ -76,9 +71,7 @@ class App extends Component {
 
       //Delete sound Id
       delete this.state.soundIds[src];
-      //Remove loop index from buttonsInUse
-      const newButtons = buttonsInUse.filter((sound) => sound !== index);
-      this.setState({ buttonsInUse: newButtons });
+
       //Transmit stop msg
       socket.emit("stop_everyone", src, index, button, user);
     }
@@ -86,8 +79,6 @@ class App extends Component {
 
   // this is like useEffect not to cause re-render
   componentDidMount() {
-  window.addEventListener("beforeunload", () => socket.emit("enable_buttons", this.state.buttonsInUse));
-
     this.setState({
       ...this.state,
       sound: new Howl({
@@ -152,7 +143,7 @@ class App extends Component {
 
     socket.on("client_disconnected", (buttonsToEnable) => {
       const { buttons } = this.state;
-      //enable buttons or stop sounds completely
+      //enable buttons for users when someone leaves the session
       for (let button of buttons) {
         buttonsToEnable.forEach((id) => {
           if (id === buttons.indexOf(button)) {
