@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import VisualCanvas from "./VisualCanvas";
 
 export default class AnylsAudio extends Component{
 
@@ -33,6 +34,6 @@ export default class AnylsAudio extends Component{
   }
 
   render() {
-    return <textArea value={this.state.audioData} />;
+    return <VisualCanvas audioData={this.state.audioData} />;
   }
 }

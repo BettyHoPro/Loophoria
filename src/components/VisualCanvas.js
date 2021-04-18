@@ -32,7 +32,7 @@ export default class VisualCanvas extends Component{
       context.lineTo(x, y);
       x += sliceWidth;
     }
-    context.linTo(x, height / 2 );
+    context.lineTo(x, height / 2 );
     context.stroke();
   }
 
