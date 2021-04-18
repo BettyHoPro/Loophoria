@@ -80,13 +80,13 @@ class App extends Component {
       const newButtons = buttonsInUse.filter((sound) => sound !== index);
       this.setState({ buttonsInUse: newButtons });
       //Transmit stop msg
-      socket.emit("stop_everyone", src, index, button);
+      socket.emit("stop_everyone", src, index, button, user);
     }
   }
 
   // this is like useEffect not to cause re-render
   componentDidMount() {
-    //window.addEventListener("beforeunload", () => socket.emit("enable_buttons", this.state.buttonsInUse));
+  window.addEventListener("beforeunload", () => socket.emit("enable_buttons", this.state.buttonsInUse));
 
     this.setState({
       ...this.state,
