@@ -1,23 +1,20 @@
-import React from "react";
+import React, { Component }from "react";
 import "./Visualization.css";
-// import "./Visual help"
-
 export default class Visualization extends Component {
+ constructor(props){
+  super(props);
+  this.state = {
+    audio: null
+  };
+ }
 
-   constructor(props) {
-     super(props);
-     this.canvas = React.createRef();
-   }
-
-   draw() {
-        
-  }
-
-
-  render (){
-    return() {
-      <canvas class="visual-block" ref={this.canvas}/>;
-    }
-  }
   
+  render() {
+    return (
+      <div className="Visualization">
+      
+       
+      </div>
+    );
+  }
 }

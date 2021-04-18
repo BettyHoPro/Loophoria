@@ -1,11 +1,12 @@
 .visual-block {
-  display: block;
+  display: flex;
   /* margin: auto;  */
   padding: auto auto;
   /* background-color: red;  */
   align-items: center;
   width: 100vw;
   height: 465px;
+
   /* position:fixed; */
 }
 
