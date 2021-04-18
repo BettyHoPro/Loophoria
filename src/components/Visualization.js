@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import  AnylsAudio from './AnylsAudio';
 import "./Visualization.css";
 import "./Button.css";
 export default class Visualization extends Component {

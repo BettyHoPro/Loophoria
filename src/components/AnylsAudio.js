@@ -15,6 +15,7 @@ export default class AnylsAudio extends Component{
     this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);// data visualize
     this.source = this.audioCtx.createMediaStreamSource(this.props.audio);
     this.source.connect(this.analyser);
+    this.rafId = requestAnimationFrame(this.run);
   }
 
   //request animation
@@ -22,5 +23,16 @@ export default class AnylsAudio extends Component{
     this.analyser.getByteTimeDomainData(this.dataArray);
     this.setState({ audioData: this.dataArray });
     this.rafId = requestAnimationFrame(this.run);
+  }
+
+  //release all the resource when we remove
+  componentWillUnmount() {
+    cancelAnimationFrame(this.rafId);
+    this.analyser.disconnect();
+    this.source.disconnect();
+  }
+
+  render() {
+    return <textArea value={this.state.audioData} />;
   }
 }
