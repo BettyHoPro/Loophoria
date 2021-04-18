@@ -6,7 +6,6 @@ import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-
 import "./App.css";
 //const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
 const socket = io("http://localhost:4000"); // local server URL
@@ -22,7 +21,7 @@ class App extends Component {
       //UPDATES EVERY CLIENT EXCEPT SENDER
       { name: "Start", currentState: false },
       { name: "loop1", currentState: false },
-      { name: "loop2", currentState: false  },
+      { name: "loop2", currentState: false },
       { name: "loop3", currentState: false },
       { name: "loop4", currentState: false },
       { name: "loop5", currentState: false },
@@ -39,12 +38,12 @@ class App extends Component {
       { name: "loop16", currentState: false },
       { name: "loop17", currentState: false },
       { name: "loop18", currentState: false },
-      { name: "loop19", currentState: false }
+      { name: "loop19", currentState: false },
     ],
   };
 
   Sprite1(src, index, button) {
-    const { buttonsInUse } = this.state;
+    const { buttonsInUse, user } = this.state;
 
     //SWITCH LOGIC FOR IF STATEMENTS
     let value = true;
@@ -67,7 +66,7 @@ class App extends Component {
       console.log("2Buttons In Use", this.state.buttonsInUse);
 
       //Transmit start msg
-      socket.emit("send_message", src, index, button);
+      socket.emit("send_message", src, index, button, user);
     }
 
     //SENDING CLIENT - STOP LOOP
@@ -90,7 +89,7 @@ class App extends Component {
     //window.addEventListener("beforeunload", () => socket.emit("enable_buttons", this.state.buttonsInUse));
 
     this.setState({
-      ...this.state, 
+      ...this.state,
       sound: new Howl({
         src: [webm, mp3],
         sprite: {
@@ -119,7 +118,7 @@ class App extends Component {
         loop: true,
       }),
     });
-    
+
     //RECEIVING CLIENT - START LOOP
     socket.on("message", (src, index, button) => {
       const { buttons } = this.state;
@@ -135,7 +134,7 @@ class App extends Component {
       });
       //play sound
     });
-    
+
     //RECEIVING CLIENT - STOP LOOP
     socket.on("stop_play", (src, index, button) => {
       const { buttons } = this.state;
@@ -150,7 +149,7 @@ class App extends Component {
       //delete sound Id
       delete this.state.soundIds[src];
     });
-    
+
     socket.on("client_disconnected", (buttonsToEnable) => {
       const { buttons } = this.state;
       //enable buttons or stop sounds completely
@@ -162,11 +161,11 @@ class App extends Component {
           }
         });
       }
-      alert(`A JamPal left the session,\nYou now have control. ;)!`);      
+      alert(`A JamPal left the session,\nYou now have control. ;)!`);
       this.setState({ buttons });
     });
 
-    socket.on("userId", roomAndId => {
+    socket.on("userId", (roomAndId) => {
       if (this.state.user.length === 0) {
         const { user } = this.state;
         user.push(roomAndId);
@@ -174,32 +173,30 @@ class App extends Component {
         console.log("USERSTATE", this.state.user);
       }
     });
-    
   }
-  
+
   render() {
     const { buttons } = this.state;
     return (
-   
       <div className="App">
         <Nav />
         <div className="btns-pannel">
-        {buttons.map((button, index) => {
-          return (
-            <Button
-              onClick={() => this.Sprite1(button.name, index, button)}
-              name={button.name} //loop#
-              buttonProps={button}
-              id={button.name} //loop#
-              key={index} //index number for sounds[index]
-              index={index}
-              disabled={button.currentState} //Passes true or false
-            />
-          );
-        })}
+          {buttons.map((button, index) => {
+            return (
+              <Button
+                onClick={() => this.Sprite1(button.name, index, button)}
+                name={button.name} //loop#
+                buttonProps={button}
+                id={button.name} //loop#
+                key={index} //index number for sounds[index]
+                index={index}
+                disabled={button.currentState} //Passes true or false
+              />
+            );
+          })}
         </div>
         <Footer />
-       </div>
+      </div>
     );
   }
 }
