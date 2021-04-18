@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import  AnylsAudio from './AnylsAudio';
 import "./Visualization.css";
-import "./Button.css";
+
 export default class Visualization extends Component {
   constructor(props) {
     super(props);
@@ -34,9 +34,10 @@ export default class Visualization extends Component {
   render() {
     return (
     <div className="Visualization">
-      <button class={'btn-loop'} onClick={this.switchMode}>
-        {this.state.audio ? "Stop" : "Visual"}
+      <button class={'btn-visual'} onClick={this.switchMode}>
+        {this.state.audio ? "Stop the animation" : "Press to check animation"}
       </button>
+      {this.state.audio ? <AnylsAudio audio={this.state.audio}/> : ''}
     </div>
     )}
 }

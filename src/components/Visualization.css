@@ -10,4 +10,15 @@
   /* position:fixed; */
 }
 
-
+.btn-visual {
+  text-decoration: none;
+  font-size: 20px;
+  color: #393939;
+  font-family: "Do Hyeon", sans-serif;
+  letter-spacing: 2px;
+  border: 3px solid rgb(255, 255, 255);
+  background-color: #1AB1C6; 
+  /* padding: 3vw; */
+  width: 100%;
+  height: 80px;
+}
