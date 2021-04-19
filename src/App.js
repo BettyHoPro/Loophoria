@@ -11,7 +11,7 @@ import "./App.css";
 const socket = io("http://localhost:4000"); // local server URL
 
 class App extends Component {
-  // coz it is class base, so we don't destruct [ state, setState ]git
+
   state = {
     sound: null,
     soundIds: {},
@@ -78,7 +78,6 @@ class App extends Component {
     }
   }
 
-  //this is like useEffect not to cause re-render
   componentDidMount() {
   console.log(this.state.user);
     this.setState({
@@ -118,13 +117,13 @@ class App extends Component {
       button.currentState = true;
       //change button(s) state
       buttons[index] = button;
-      //update state
+      //play sound
       const newSound = this.state.sound.play(src);
+      //update state
       this.setState({
         soundIds: { ...this.state.soundIds, [src]: newSound },
         buttons,
       });
-      //play sound
     });
 
     //RECEIVING CLIENT - STOP LOOP
