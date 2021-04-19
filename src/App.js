@@ -6,6 +6,8 @@ import mp3 from "./tracks/sprite.mp3"; //Web Audio API
 import Button from "./components/Button";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import Visualization from "./components/Visualization";
+
 import "./App.css";
 //const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
 const socket = io("http://localhost:4000"); // local server URL
@@ -40,6 +42,8 @@ class App extends Component {
       { name: "loop19", currentState: false },
     ],
   };
+  
+  
 
   Sprite1(src, index, button) {
     const { user } = this.state;
@@ -183,17 +187,13 @@ class App extends Component {
 
     
   }
-  
-  
-
-  
-  
-  
+    
   render() {
     const { buttons } = this.state;
     return (
       <div className="App">
         <Nav />
+        <div className="index-body">
         <div className="btns-pannel">
           {buttons.map((button, index) => {
             return (
@@ -208,6 +208,10 @@ class App extends Component {
               />
             );
           })}
+        </div>
+        <div className="visualization">
+          <Visualization />
+        </div>
         </div>
         <Footer />
       </div>
