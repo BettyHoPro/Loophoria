@@ -7,10 +7,11 @@ export default function Button(props) {
   return (
     <button
     id={props.id}
-    class= {`btn-loop ${props.name}`}
+    class= { props.disabled ? `btn-loop` : `btn-loop ${props.name}`}
     onClick={props.onClick}
     disabled={props.disabled}
     >{buttonProps.name}
     </button>
+    
   );
 }

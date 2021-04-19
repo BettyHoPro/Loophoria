@@ -9,8 +9,8 @@ import Footer from "./components/Footer";
 import Visualization from "./components/Visualization";
 
 import "./App.css";
-const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
-//const socket = io("http://localhost:4000"); // local server URL
+//const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
+const socket = io("http://localhost:4000"); // local server URL
 
 class App extends Component {
 
