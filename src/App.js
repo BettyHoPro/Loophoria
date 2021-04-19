@@ -9,8 +9,8 @@ import Footer from "./components/Footer";
 import Visualization from "./components/Visualization";
 
 import "./App.css";
-//const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
-const socket = io("http://localhost:4000"); // local server URL
+const socket = io("https://loophoria-server.herokuapp.com"); // heroku server URL
+//const socket = io("http://localhost:4000"); // local server URL
 
 class App extends Component {
 
@@ -202,9 +202,9 @@ class App extends Component {
               name={button.name} //loop#
               buttonProps={button}
               id={button.name} //loop#
-                key={index} //index number for sounds[index]
-                index={index}
-                disabled={button.currentState} //Passes true or false
+              key={index} //index number for sounds[index]
+              index={index}
+              disabled={button.currentState} //Passes true or false
               />
             );
           })}
