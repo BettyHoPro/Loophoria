@@ -66,6 +66,7 @@ class App extends Component {
 
     //SENDING CLIENT - STOP LOOP
     if (value === false) {
+
       //Stop local sound
       this.state.sound.stop(this.state.soundIds[src]);
 
@@ -77,10 +78,10 @@ class App extends Component {
     }
   }
 
-  // this is like useEffect not to cause re-render
+  //this is like useEffect not to cause re-render
   componentDidMount() {
+  console.log(this.state.user);
     this.setState({
-      ...this.state,
       sound: new Howl({
         src: [webm, mp3],
         sprite: {
@@ -107,7 +108,7 @@ class App extends Component {
         },
         html5: true,
         loop: true,
-      }),
+      })
     });
 
     //RECEIVING CLIENT - START LOOP
@@ -141,6 +142,7 @@ class App extends Component {
       delete this.state.soundIds[src];
     });
 
+    //peer disconnected
     socket.on("client_disconnected", (buttonsToEnable) => {
       const { buttons } = this.state;
       //enable buttons for users when someone leaves the session
@@ -155,7 +157,10 @@ class App extends Component {
       alert(`A JamPal left the session,\nYou now have control. ;)!`);
       this.setState({ buttons });
     });
-
+    
+    
+    
+    //works on initial connection    
     socket.on("userId", (roomAndId) => {
       if (this.state.user.length === 0) {
         const { user } = this.state;
@@ -164,8 +169,27 @@ class App extends Component {
         console.log("USERSTATE", this.state.user);
       }
     });
-  }
+    
+    
+    //on disconnect
+    //set user to {};
+    
+    // socket.on("disconnect", () => {
+    //   console.log("BEFORE",this.state.user)
+    //   const { user } = this.state;
+    //   user[0] = {};
+    //   this.setState({ user });
+    //   console.log("AFTER",this.state.user)
+    // });
 
+    
+  }
+  
+  
+
+  
+  
+  
   render() {
     const { buttons } = this.state;
     return (
@@ -175,10 +199,10 @@ class App extends Component {
           {buttons.map((button, index) => {
             return (
               <Button
-                onClick={() => this.Sprite1(button.name, index, button)}
-                name={button.name} //loop#
-                buttonProps={button}
-                id={button.name} //loop#
+              onClick={() => this.Sprite1(button.name, index, button)}
+              name={button.name} //loop#
+              buttonProps={button}
+              id={button.name} //loop#
                 key={index} //index number for sounds[index]
                 index={index}
                 disabled={button.currentState} //Passes true or false
